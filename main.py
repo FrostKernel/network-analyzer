@@ -18,8 +18,8 @@ def get_default_gateway() -> str:
 
 def check_internet_reachability() -> str:
     failed_hops = list()
-    ip = '1.1.1.1'
-    route = traceroute(ip)
+    ip: str = '1.1.1.1'
+    route: list = traceroute(ip)
     for hop in route:
         if hop.is_alive == False:
             failed_hops.append(hop)
@@ -30,28 +30,29 @@ def check_internet_reachability() -> str:
     else:
         print("Internet reachability test passed. Gateway is online and internet is at reach!")
 
-def check_gateway_status(local_gateway,gateway_status) -> str:
-    status = ping(local_gateway, count=1, privileged=False)
-    current_time = datetime.now().strftime("%I:%M %p")
-    if status.is_alive == True:
-        if gateway_status is not None:
-            print(f"Gateway came back online at: {current_time}, testing internet reachability.")
-            gateway_status = None
-            check_internet_reachability()
-        else:
-            print("Default gateway is up.\nProceeding to test internet connectivity")
-            check_internet_reachability()
-    else:
-        if status.is_alive == False and gateway_status is None:
-            print(f"Default gateway is down. Detected downtime at: {current_time}")
-            gateway_status = current_time
-    return gateway_status
+def check_gateway_status(local_gateway,was_down) -> bool:
+    is_alive: bool = ping(local_gateway, count=1, privileged=False).is_alive
+    current_time: str = datetime.now().strftime("%I:%M %p")
+    if is_alive and was_down:
+        was_down = False
+        print(f"Gateway came back online at: {current_time}, testing internet reachability.")
+        check_internet_reachability()
+    elif is_alive and was_down is False:
+        print("Default gateway is up.\nProceeding to test internet connectivity")
+        check_internet_reachability()
+    elif not is_alive and was_down is False:
+        was_down = True
+        print(f"Default gateway is down. Detected downtime at: {current_time}")
+    return was_down
 
 
-def main():
-    local_gateway = get_default_gateway()
-    gateway_status = None
+def main() -> None:
+    local_gateway: str = get_default_gateway()
+    was_down: bool = False
     while True:
-        gateway_status = check_gateway_status(local_gateway,gateway_status)
+        was_down = check_gateway_status(local_gateway,was_down)
         time.sleep(5)
-main()
+
+
+if __name__ == "__main__":
+    main()

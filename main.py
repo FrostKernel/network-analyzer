@@ -12,9 +12,9 @@ def event_logging() -> str:
     current_time: str = datetime.now().strftime('%d-%m-%y')
     log_file: str = f"gateway-status-{current_time}.log"
     if os.path.exists(log_file):
-        mode = "a"
+        mode: str = "a"
     else:
-        mode = "w"
+        mode: str = "w"
     logging.basicConfig(
         level = logging.INFO,
         filename = f"gateway-status-{current_time}.log",

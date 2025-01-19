@@ -34,7 +34,7 @@ def get_default_gateway() -> str:
         sys.exit(0)
 
 
-def check_internet_connectivity() -> str:
+def check_internet_connectivity(logging) -> str:
     failed_hops: list = list()
     ip: str = '1.1.1.1'
     route: list = traceroute(ip)
@@ -44,7 +44,7 @@ def check_internet_connectivity() -> str:
     if len(failed_hops) > 0:
         logging.info(f"Internet connectivity failure detected. Server used for test: {ip}")
         for hop in failed_hops:
-            logging.info(f"Failed path number: {hop.distance}, at address: {hop.address}, percent of lost packets: {hop.packet_loss}")
+            logging.info(f"Failed path number: {hop.distance}, at address: {hop.address}, percent of lost packets: {hop.packet_loss}%")
         logging.info(f"----")
     else:
         logging.info("Internet connectivity test passed. Gateway is online and internet is at reach!")
@@ -56,10 +56,10 @@ def check_gateway_status(local_gateway,was_down,logging) -> bool:
     if is_alive and was_down:
         was_down = False
         logging.info(f"Gateway came back online, testing internet connectivity")
-        check_internet_connectivity()
+        check_internet_connectivity(logging)
     elif is_alive and was_down is False:
         logging.info(f"Default gateway is up. Proceeding to test internet connectivity")
-        check_internet_connectivity()
+        check_internet_connectivity(logging)
     elif not is_alive and was_down is False:
         was_down = True
         logging.warning(f"Default gateway is down.")

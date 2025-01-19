@@ -72,9 +72,13 @@ def main() -> None:
     logger: logging.Logger = event_logging()
     interval: int = 10 # Interval in between checks, use seconds.
     was_down: bool = False
-    while True:
-        was_down = check_gateway_status(local_gateway,was_down,logger)
-        time.sleep(interval)
+    try:
+        while True:
+            was_down = check_gateway_status(local_gateway,was_down,logger)
+            time.sleep(interval)
+    except KeyboardInterrupt:
+        print(f"\nExiting...")
+        logger.info("Script ended by user.")
 
 
 if __name__ == "__main__":

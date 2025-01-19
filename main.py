@@ -15,7 +15,7 @@ def event_logging() -> str:
         mode: str = "a"
     else:
         mode: str = "w"
-    logger = logging.getLogger()
+    logger = logging.getLogger(__name__)
     logging.basicConfig(
         level = logging.INFO,
         filename = f"gateway-status-{current_time}.log",

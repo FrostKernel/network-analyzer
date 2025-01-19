@@ -2,7 +2,8 @@
 Network Analyzer is a project in development with intent to be a tool for learning the python programming language. Most of it's features are not ready for end-user usage and are subject to change, dubious code quality warning.
 
 ## Features
-As of the last commit, the software's only functionality is checking whether the default network gateway the user system has set is alive and if it is, it tests internet connection via traceroute, to check if it is in fact connecting to the internet. However, if the gateway is alive and internet connection fails, a report will be generated containing: Network Hop which failed, it's address and percent of packet loss.
+- Checks if the default network gateway is alive, if it is check's internet connection using traceroute. Generates a report in case of internet connection failure of: hop number, hop address and percent of packet loss per hop.
+- Logging of generated reports to a gateway-status file with .log extension.
 
 ## Requirements:
 - Administrator privileges for execution, needed because of the ICMPlib's traceroute function requiring it. Refer to: [Traceroute Documentation](https://github.com/ValentinBELYN/icmplib/blob/main/docs/2-functions.md#traceroute)

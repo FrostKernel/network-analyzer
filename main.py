@@ -15,13 +15,14 @@ def event_logging() -> str:
         mode: str = "a"
     else:
         mode: str = "w"
+    logger = logging.getLogger()
     logging.basicConfig(
         level = logging.INFO,
         filename = f"gateway-status-{current_time}.log",
         filemode = mode,
         format = "%(asctime)s %(levelname)s %(message)s"
     )
-    return logging
+    return logger
 
 
 def get_default_gateway() -> str:
@@ -34,7 +35,7 @@ def get_default_gateway() -> str:
         sys.exit(0)
 
 
-def check_internet_connectivity(logging) -> str:
+def check_internet_connectivity(logger) -> str:
     failed_hops: list = list()
     ip: str = '1.1.1.1'
     route: list = traceroute(ip)
@@ -42,37 +43,37 @@ def check_internet_connectivity(logging) -> str:
         if not hop.is_alive:
             failed_hops.append(hop)
     if len(failed_hops) > 0:
-        logging.info(f"Internet connectivity failure detected. Server used for test: {ip}")
+        logger.info(f"Internet connectivity failure detected. Server used for test: {ip}")
         for hop in failed_hops:
-            logging.info(f"Failed path number: {hop.distance}, at address: {hop.address}, percent of lost packets: {hop.packet_loss}%")
-        logging.info(f"----")
+            logger.info(f"Failed path number: {hop.distance}, at address: {hop.address}, percent of lost packets: {hop.packet_loss}%")
+        logger.info(f"----")
     else:
-        logging.info("Internet connectivity test passed. Gateway is online and internet is at reach!")
-        logging.info(f"----")
+        logger.info("Internet connectivity test passed. Gateway is online and internet is at reach!")
+        logger.info(f"----")
 
 
-def check_gateway_status(local_gateway,was_down,logging) -> bool:
+def check_gateway_status(local_gateway,was_down,logger) -> bool:
     is_alive: bool = ping(local_gateway, count=1, privileged=False).is_alive
     if is_alive and was_down:
         was_down = False
-        logging.info(f"Gateway came back online, testing internet connectivity")
-        check_internet_connectivity(logging)
+        logger.info(f"Gateway came back online, testing internet connectivity")
+        check_internet_connectivity(logger)
     elif is_alive and was_down is False:
-        logging.info(f"Default gateway is up. Proceeding to test internet connectivity")
-        check_internet_connectivity(logging)
+        logger.info(f"Default gateway is up. Proceeding to test internet connectivity")
+        check_internet_connectivity(logger)
     elif not is_alive and was_down is False:
         was_down = True
-        logging.warning(f"Default gateway is down.")
+        logger.warning(f"Default gateway is down.")
     return was_down
 
 
 def main() -> None:
     local_gateway: str = get_default_gateway()
-    logging: str = event_logging()
+    logger: logging.Logger = event_logging()
     interval: int = 10 # Interval in between checks, use seconds.
     was_down: bool = False
     while True:
-        was_down = check_gateway_status(local_gateway,was_down,logging)
+        was_down = check_gateway_status(local_gateway,was_down,logger)
         time.sleep(interval)
 
 

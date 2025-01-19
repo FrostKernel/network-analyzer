@@ -2,7 +2,7 @@
 Network Analyzer is a project in development with intent to be a tool for learning the python programming language. Most of it's features are not ready for end-user usage and are subject to change, dubious code quality warning.
 
 ## Features
-- Checks if the default network gateway is alive, if it is check's internet connection using traceroute. Generates a report in case of internet connection failure of: hop number, hop address and percent of packet loss per hop.
+- Checks if the default network gateway is alive, if it is checks internet connection using traceroute. Generates a report in case of internet connection failure of: hop number, hop address and percent of packet loss per hop.
 - Logging of generated reports to a gateway-status file with .log extension.
 
 ## Requirements:

@@ -18,7 +18,7 @@ def event_logging() -> str:
     logger = logging.getLogger(__name__)
     logging.basicConfig(
         level = logging.INFO,
-        filename = f"gateway-status-{current_time}.log",
+        filename = log_file,
         filemode = mode,
         format = "%(asctime)s %(levelname)s %(message)s"
     )

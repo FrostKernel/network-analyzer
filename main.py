@@ -52,7 +52,7 @@ def check_internet_connectivity(logger) -> str:
         logger.info(f"----")
 
 
-def check_gateway_status(local_gateway,was_down,logger) -> bool:
+def check_gateway_status(local_gateway, was_down, logger) -> bool:
     is_alive: bool = ping(local_gateway, count=1, privileged=False).is_alive
     if is_alive and was_down:
         was_down = False
@@ -74,7 +74,7 @@ def main() -> None:
     was_down: bool = False
     try:
         while True:
-            was_down = check_gateway_status(local_gateway,was_down,logger)
+            was_down = check_gateway_status(local_gateway, was_down, logger)
             time.sleep(interval)
     except KeyboardInterrupt:
         print(f"\nExiting...")

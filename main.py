@@ -15,7 +15,7 @@ def event_logging() -> str:
         mode: str = "a"
     else:
         mode: str = "w"
-    logger: str = logging.getLogger(__name__)
+    logger: logging.Logger = logging.getLogger(__name__)
     logging.basicConfig(
         level = logging.INFO,
         filename = log_file,

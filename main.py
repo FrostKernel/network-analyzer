@@ -15,7 +15,7 @@ def event_logging() -> str:
         mode: str = "a"
     else:
         mode: str = "w"
-    logger = logging.getLogger(__name__)
+    logger: str = logging.getLogger(__name__)
     logging.basicConfig(
         level = logging.INFO,
         filename = log_file,
@@ -35,7 +35,7 @@ def get_default_gateway() -> str:
         sys.exit(0)
 
 
-def check_internet_connectivity(logger) -> str:
+def check_internet_connectivity(logger: str) -> str:
     failed_hops: list = list()
     ip: str = '1.1.1.1'
     route: list = traceroute(ip)
@@ -52,7 +52,7 @@ def check_internet_connectivity(logger) -> str:
         logger.info(f"----")
 
 
-def check_gateway_status(local_gateway, was_down, logger) -> bool:
+def check_gateway_status(local_gateway: str, was_down: bool, logger: str) -> bool:
     is_alive: bool = ping(local_gateway, count=1, privileged=False).is_alive
     if is_alive and was_down:
         was_down = False
